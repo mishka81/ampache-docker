@@ -1,6 +1,6 @@
 #!/bin/sh
 
-php -r "readfile('https://getcomposer.org/installer');" | php && mv composer.phar /usr/local/bin/composer
+PHP_FPM_LISTEN_MODE="0660"
 
 sed -i "s|;listen.owner\s*=\s*nobody|listen.owner = ${PHP_FPM_USER}|g" /etc/php7/php-fpm.conf
 sed -i "s|;listen.group\s*=\s*nobody|listen.group = ${PHP_FPM_GROUP}|g" /etc/php7/php-fpm.conf

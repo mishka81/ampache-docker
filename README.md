@@ -4,23 +4,40 @@ This is a out-of-the-box Ampache image, built on top of Alpine Linux, MariaDB an
 
 ## Usage
 ```
-docker run --name=ampache -d -v /path/to/your/music:/media:ro -p 80:80 ampache/ampache
+docker run --name=ampache -d -v /path/to/your/music:/media -p 80:80 mishka81/ampache-docker
 ```
+
 
 ## First run
 
 Go to http://<AMPACHE_IP> and follow instuctions.
 
-MySQL user is : ampache
+MySQL user and password is "ampache".
 
-MySQL password is : ampache
+When installation is done, go to admin page, then create a catalog for your music volume, with path "/media".
 
-When installation id done, go to admin page.
-Then create a catalog for your music mounted in /media.
+## Customizations
 
-## Customize image
 
-You can build a custom image according to your needs.
+### Volume access permissions
+
+By default, container has read/write acces to music volume with user / group id 1000.
+
+If not, you can specify your uid and gid like this :
+```
+docker run --name=ampache -d -v /path/to/your/music:/media -e "UID=<your_uid>" -e "GID=<your_gid" -p 80:80 mishka81/ampache-docker
+```
+
+
+You can override all ENV variables defined in DockerFile with 
+```
+-e "ENVVAR=VALUE"
+```
+
+For example, you can adjust memory used by PHP in container.
+
+See DockerFile.
+
 All ENV vars from Dockerfile can be overriden at build.
 
 Example if you want to increase PHP memory :
@@ -32,7 +49,7 @@ docker build -t ampache:mytag --build-arg PHP_MEMORY_LIMIT=1024M .
 
 Then run it :
 ```
-docker run --name=ampache -d -v /path/to/your/music:/media:ro -p 80:80 ampache:mytag
+docker run --name=ampache -d -v /path/to/your/music:/media -p 80:80 ampache:mytag
 ```
 
 
