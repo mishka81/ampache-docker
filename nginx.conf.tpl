@@ -1,8 +1,8 @@
 server {
 
     # listen to
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen ${NGINX_PORT} default_server;
+    listen [::]:${NGINX_PORT} default_server;
 
     charset utf-8;
 

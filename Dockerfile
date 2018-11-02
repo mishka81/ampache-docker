@@ -16,7 +16,8 @@ ENV PHP_DISPLAY_STARTUP_ERRORS="On"
 ENV PHP_ERROR_REPORTING="E_COMPILE_ERROR\|E_RECOVERABLE_ERROR\|E_ERROR\|E_CORE_ERROR" 
 ENV PHP_CGI_FIX_PATHINFO=0
 
-ENV AMPACHE_VERSION=3.8.9
+ENV AMPACHE_VERSION=3.9.0
+ENV NGINX_PORT=80
 ENV DB_DATA_PATH="/var/lib/mysql"
 ENV DB_ROOT_PASS="ampache"
 ENV DB_USER="ampache"
@@ -25,7 +26,7 @@ ENV MAX_ALLOWED_PACKET="200M"
 
 # Install alpine pkg
 RUN apk add php7 php7-pdo php7-pdo_mysql php7-session php7-json php7-simplexml php7-fpm \ 
-php7-phar php7-iconv php7-gd php7-mbstring php7-curl php7-tokenizer nginx mariadb mariadb-client git ffmpeg shadow
+php7-phar php7-iconv php7-gd php7-mbstring php7-curl php7-tokenizer nginx mariadb mariadb-client git gettext ffmpeg shadow
 
 # Setup PHP
 ADD install_php.sh /install_php.sh
@@ -34,7 +35,7 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php && mv composer
 
 # Deploy ampache 
 RUN rm /etc/nginx/conf.d/default.conf
-ADD nginx.conf /etc/nginx/conf.d/ampache.conf
+ADD nginx.conf.tpl /tmp
 RUN wget -qO- https://github.com/ampache/ampache/archive/${AMPACHE_VERSION}.tar.gz | tar xvz -C /tmp
 RUN mv /tmp/ampache*/* /var/www/
 RUN cd /var/www && composer install --prefer-source --no-interaction
