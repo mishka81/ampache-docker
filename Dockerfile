@@ -18,6 +18,7 @@ ENV PHP_CGI_FIX_PATHINFO=0
 
 ENV AMPACHE_VERSION=3.9.0
 ENV NGINX_PORT=80
+
 ENV DB_DATA_PATH="/var/lib/mysql"
 ENV DB_ROOT_PASS="ampache"
 ENV DB_USER="ampache"
@@ -33,18 +34,17 @@ ADD install_php.sh /install_php.sh
 RUN chmod 755 /install_php.sh
 RUN php -r "readfile('https://getcomposer.org/installer');" | php && mv composer.phar /usr/local/bin/composer
 
-# Deploy ampache 
+# Setup ampache 
 RUN rm /etc/nginx/conf.d/default.conf
-ADD nginx.conf.tpl /tmp
+ADD nginx.conf.tpl /tmp/nginx.conf.tpl
 RUN wget -qO- https://github.com/ampache/ampache/archive/${AMPACHE_VERSION}.tar.gz | tar xvz -C /tmp
 RUN mv /tmp/ampache*/* /var/www/
 RUN cd /var/www && composer install --prefer-source --no-interaction
 ADD info.php /var/www/info.php
 
-# Setup MySQL
+# Setup MySQL install script
 ADD install_mysql.sh /install_mysql.sh
 RUN chmod 755 /install_mysql.sh
-RUN /install_mysql.sh
 
 # Setup container's entrypoint
 ADD run.sh /run.sh

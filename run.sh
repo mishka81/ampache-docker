@@ -1,6 +1,7 @@
 #!/bin/sh
 
-echo "Launching Ampache ... "
+# Update MySQL config
+/install_mysql.sh
 
 # Update PHP config
 /install_php.sh
